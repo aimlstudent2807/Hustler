@@ -1,0 +1,17 @@
+
+   from flask import Flask
+
+
+   
+   pip install flask flask_sqlalchemy flask_migrate werkzeug google-generativeai
+
+   $env:FLASK_ENV="development"
+   $env:SWASTHYASYNC_SECRET_KEY="your-strong-secret"
+   $env:SWASTHYASYNC_DATABASE_URI="sqlite:///swasthyasync.db"
+   $env:SWASTHYASYNC_GEMINI_API_KEY="AIzaSyC7XtyI3bdsbV3GbjH6fuoXG5EZsIWD1vs"
+
+   flask db init
+   flask db migrate -m "Initial SwasthyaSync schema"
+   flask db upgrade
+
+    python app.py
