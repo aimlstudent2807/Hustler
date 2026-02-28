@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Profile · SwasthyaSync{% endblock %}
+{% block content %}
+<section class="ss-section ss-section-hero fade-in">
+  <div class="ss-section-header">
+    <h1>Hello, {{ user.full_name }}</h1>
+    <p>Set your lifestyle timings so SwasthyaSync can align every plan with your real routine.</p>
+  </div>
+
+  <div class="ss-grid-two">
+    <div class="ss-card ss-card-elevated slide-up">
+      <h2>Lifestyle & Meal Timing Intelligence</h2>
+      <p class="ss-muted">
+        SwasthyaSync learns your wake time, meals and sleep to personalise diet plans, hydration and workout windows.
+      </p>
+
+      <form id="lifestyle-form" method="post">
+        <div class="ss-form-grid">
+          <label>
+            Wake time
+            <input
+              type="time"
+              name="wake_time"
+              value="{{ lifestyle.wake_time.strftime('%H:%M') if lifestyle and lifestyle.wake_time else '' }}"
+            />
+          </label>
+          <label>
+            Breakfast time
+            <input
+              type="time"
+              name="breakfast_time"
+              value="{{ lifestyle.breakfast_time.strftime('%H:%M') if lifestyle and lifestyle.breakfast_time else '' }}"
+            />
+          </label>
+          <label>
+            Lunch time
+            <input
+              type="time"
+              name="lunch_time"
+              value="{{ lifestyle.lunch_time.strftime('%H:%M') if lifestyle and lifestyle.lunch_time else '' }}"
+            />
+          </label>
+          <label>
+            Snack time
+            <input
+              type="time"
+              name="snack_time"
+              value="{{ lifestyle.snack_time.strftime('%H:%M') if lifestyle and lifestyle.snack_time else '' }}"
+            />
+          </label>
+          <label>
+            Dinner time
+            <input
+              type="time"
+              name="dinner_time"
+              value="{{ lifestyle.dinner_time.strftime('%H:%M') if lifestyle and lifestyle.dinner_time else '' }}"
+            />
+          </label>
+          <label>
+            Sleep time
+            <input
+              type="time"
+              name="sleep_time"
+              value="{{ lifestyle.sleep_time.strftime('%H:%M') if lifestyle and lifestyle.sleep_time else '' }}"
+            />
+          </label>
+        </div>
+
+        <button type="submit" class="ss-btn ss-btn-secondary">
+          Update lifestyle timings
+        </button>
+      </form>
+
+      <div class="ss-onboarding-hint fade-in delay-2">
+        <h3>Why timings matter</h3>
+        <p>
+          Our Lifestyle & Meal Timing Intelligence engine uses these times to
+          schedule meals, optimise sleep, and dynamically adjust hydration and snacking windows.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+

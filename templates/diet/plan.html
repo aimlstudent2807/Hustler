@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Diet Intelligence · SwasthyaSync{% endblock %}
+{% block content %}
+<section class="ss-section fade-in">
+  <div class="ss-section-header">
+    <h1>AI‑Powered Diet Blueprint</h1>
+    <p>Hyper‑personalised to your body, preferences, and lifestyle timing.</p>
+  </div>
+
+  <form method="post" target="_blank" class="ss-card ss-card-elevated slide-up">
+    <h2>Generate smart diet plan</h2>
+    <p class="ss-muted">
+      We use your stored profile and lifestyle timings. You can fine‑tune core inputs here if needed.
+      Your detailed AI‑generated plan will open in a new page after you click <strong>Get diet plan</strong>.
+    </p>
+    <div class="ss-form-grid">
+      <label>Age <input type="number" name="age" required /></label>
+      <label>Gender
+        <select name="gender" required>
+          <option value="">Select</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+      <label>Height (cm) <input type="number" name="height" required /></label>
+      <label>Weight (kg) <input type="number" name="weight" step="0.1" required /></label>
+      <label>Activity level
+        <select name="activity_level" required>
+          <option value="">Select</option>
+          <option value="sedentary">Sedentary</option>
+          <option value="light">Light</option>
+          <option value="moderate">Moderate</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      <label>Primary goal
+        <select name="primary_goal" required>
+          <option value="">Select</option>
+          <option value="fat_loss">Fat loss</option>
+          <option value="muscle_gain">Muscle gain</option>
+          <option value="recomposition">Recomposition</option>
+          <option value="general_wellness">General wellness</option>
+        </select>
+      </label>
+      <label>Diet preference
+        <select name="diet_preference">
+          <option value="">No preference</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="non_vegetarian">Non‑vegetarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="jain">Jain</option>
+        </select>
+      </label>
+      <label>Regional cuisine
+        <input type="text" name="regional_cuisine" />
+      </label>
+       <div class="ss-span-2">
+        <!--<h3 style="margin: 0 0 8px;">Meal timing (optional)</h3>
+        <p class="ss-muted" style="margin: 0 0 12px;">
+          If you change these times here, the diet plan timings will change accordingly.
+        </p>
+      </div>
+      <label>Wake time <input type="time" name="wake_time" /></label>
+      <label>Breakfast time <input type="time" name="breakfast_time" /></label>
+      <label>Lunch time <input type="time" name="lunch_time" /></label>
+      <label>Snack time <input type="time" name="snack_time" /></label>
+      <label>Dinner time <input type="time" name="dinner_time" /></label>
+      <label>Sleep time <input type="time" name="sleep_time" /></label> -->
+      <label class="ss-span-2">Medical issues
+        <textarea name="medical_issues" rows="2"></textarea>
+      </label>
+      <label class="ss-span-2">Food likes
+        <textarea name="food_likes" rows="2"></textarea>
+      </label>
+      <label class="ss-span-2">Food dislikes
+        <textarea name="food_dislikes" rows="2"></textarea>
+      </label>
+      <label class="ss-span-2">Additional notes
+        <textarea name="additional_notes" rows="2"></textarea>
+      </label>
+      <input type="hidden" name="bmi" />
+    </div>
+
+    <button type="submit" class="ss-btn ss-btn-primary">
+      Get diet plan
+    </button>
+  </form>
+</section>
+{% endblock %}
+

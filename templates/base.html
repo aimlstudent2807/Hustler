@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}SwasthyaSync{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </head>
+  <body>
+    <header class="ss-header">
+      <div class="ss-brand">
+        <img
+          src="{{ url_for('static', filename='img/logorb.png') }}"
+          alt="SwasthyaSync logo"
+          class="ss-logo"
+        />
+        <img
+          src="{{ url_for('static', filename='img/namembg.png') }}"
+          alt="SwasthyaSync"
+          class="ss-logo-name"
+        />
+      </div>
+      <nav class="ss-nav">
+        <a href="{{ url_for('profile.profile') }}">Profile</a>
+        <a href="{{ url_for('diet.diet_plan') }}">Diet Intelligence</a>
+        <a href="{{ url_for('nutrition.tracker') }}">Nutrition Tracker</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+      </nav>
+    </header>
+
+    <main class="ss-main">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="ss-flash-container">
+        {% for category, msg in messages %}
+        <div class="ss-flash ss-flash-{{ category }}">
+          {{ msg }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="ss-footer">
+      <p>© {{ current_year or 2026 }} SwasthyaSync · Intelligent Lifestyle Nutrition</p>
+    </footer>
+  </body>
+</html>
+

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Diet Plan · SwasthyaSync{% endblock %}
+{% block content %}
+<section class="ss-section fade-in">
+  <div class="ss-section-header">
+    <h1>AI‑Powered Diet Blueprint</h1>
+    <p>Hyper‑personalised to your body, preferences, and lifestyle timing.</p>
+  </div>
+
+  {% if diet_response and diet_response.meals is not none %}
+  <section class="ss-diet-output fade-in delay-1">
+    {% if diet_response.meta and diet_response.meta.source == 'fallback' %}
+    <!-- <div class="ss-card ss-card-inline ss-card-highlight fade-in">
+      <h3>Offline diet plan</h3>
+      <p class="ss-muted">
+        Gemini API key is not configured, so this plan is generated locally. To use Gemini, set
+        <strong>SWASTHYASYNC_GEMINI_API_KEY</strong> and restart the app.
+      </p>
+    </div> -->
+    {% endif %}
+
+    <section class="ss-card ss-card-elevated ss-lifestyle-insights slide-up">
+      <h2>All‑day routine snapshot</h2>
+      <p class="ss-muted">
+        All is good. Here’s how your key meals line up against your current routine, with a quick recommendation for each.
+      </p>
+      <!-- <div class="ss-lifestyle-grid">
+        {% set ordered_meals = [
+          ('early_morning', 'Early Morning'),
+          ('breakfast', 'Breakfast'),
+          ('mid_morning_snack', 'Mid‑morning Snack'),
+          ('lunch', 'Lunch'),
+          ('evening_snack', 'Evening Snack'),
+          ('dinner', 'Dinner')
+        ] %}
+        {% for key, label in ordered_meals %}
+          {% set meal = diet_response.meals.get(key) %}
+          {% if meal %}
+          <div>
+            <h3>{{ label }}</h3>
+            {% set meal_time = meal.scheduled_time or prompt_payload.lifestyle_timing[key ~ '_time'] %}
+            {% if meal_time %}
+            <p class="ss-meal-time">{{ meal_time }}</p>
+            {% endif %}
+            {% if meal_time %}
+            <p class="ss-muted">
+              {{ label }} aligned with your routine at {{ meal_time }}.
+            </p>
+            {% endif %}
+            {% if meal.summary %}
+            <p>{{ meal.summary }}</p>
+            {% endif %}
+            {% set meal_items = meal.get("items") %}
+            {% if meal_items %}
+            <ul>
+              {% for item in meal_items[:2] %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div> -->
+    </section>
+
+    <div class="ss-diet-grid">
+      {% for key, meal in diet_response.meals.items() %}
+      <article class="ss-card ss-card-animated">
+        <header class="ss-card-header">
+          <h3 class="ss-meal-title ss-meal-{{ key }}">{{ meal.title or key|replace('_',' ')|title }}</h3>
+          <p class="ss-meal-time">
+            {{ meal.scheduled_time or prompt_payload.lifestyle_timing[key ~ '_time'] }}
+          </p>
+        </header>
+        <div class="ss-card-body">
+          {% if meal.summary %}
+          <p>{{ meal.summary }}</p>
+          {% endif %}
+          {% set meal_items = meal.get("items") %}
+          {% if meal_items %}
+          <p class="ss-muted"><strong>Options</strong> (pick 1–2)</p>
+          <ul>
+            {% for item in meal_items %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <section class="ss-card ss-card-elevated ss-lifestyle-insights slide-up delay-2">
+      <h2>Lifestyle Insights</h2>
+      <div class="ss-lifestyle-badges">
+        {% set status = diet_response.lifestyle.sleep_status or prompt_payload.sleep_analysis.sleep_status %}
+        <span class="ss-badge
+          {% if status == 'optimal' %} ss-badge-success
+          {% elif status == 'insufficient' %} ss-badge-warning
+          {% elif status == 'excessive' %} ss-badge-info
+          {% else %} ss-badge-neutral {% endif %}">
+          Sleep: {{ status|capitalize }}
+        </span>
+      </div>
+
+      <div class="ss-lifestyle-grid">
+        <div>
+          <h3>Sleep quality</h3>
+          <p>
+            <strong>Hours:</strong>
+            {{ diet_response.lifestyle.sleep_hours or prompt_payload.sleep_analysis.sleep_hours or 'N/A' }}
+          </p>
+          <p>
+            <strong>Dinner timing:</strong>
+            {{ diet_response.lifestyle.dinner_timing_feedback }}
+          </p>
+        </div>
+        <div>
+          <h3>Hydration strategy</h3>
+          <p>{{ diet_response.hydration.summary }}</p>
+          <ul>
+            {% for tip in diet_response.hydration.timing_suggestions %}
+            <li>{{ tip }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <h3>Workout window</h3>
+          <p>{{ diet_response.lifestyle.recommended_workout_window }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ss-card ss-card-elevated ss-lifestyle-insights slide-up delay-3">
+      <h2>Smart coach recommendations</h2>
+      <p class="ss-muted">
+        Use these as gentle guidelines to get even more from this plan.
+      </p>
+      <ul>
+        <li>
+          <strong>Sleep tuning:</strong>
+          {% set status = diet_response.lifestyle.sleep_status or prompt_payload.sleep_analysis.sleep_status %}
+          {% if status == 'insufficient' %}
+          Aim to extend your sleep window by 30–60 minutes over the next week while keeping your dinner and wake times stable.
+          {% elif status == 'excessive' %}
+          Gradually tighten your sleep window by 30 minutes while keeping dinner timing consistent and avoiding heavy late‑night snacks.
+          {% else %}
+          Maintain your current sleep window and focus on winding down at least 45–60 minutes before bed.
+          {% endif %}
+        </li>
+        <li>
+          <strong>Plate balance:</strong>
+          Prioritise a balanced plate at each major meal – lean protein, complex carbs, colourful vegetables and some healthy fats.
+        </li>
+        <li>
+          <strong>Timing consistency:</strong>
+          Try to keep meals within a ±30 minute window of the suggested times to stabilise energy, hunger and glucose swings.
+        </li>
+        <li>
+          <strong>Hydration rhythm:</strong>
+          Follow the hydration timing above with steady sips through your wake window, slowing intake in the last hour before sleep.
+        </li>
+      </ul>
+    </section>
+
+    <section class="ss-card ss-card-elevated ss-lifestyle-insights slide-up delay-4">
+      <h2>Important notes</h2>
+      <ul>
+        <li><strong>Protein anchor:</strong> aim to include a clear protein source in breakfast, lunch and dinner (dal/curd/paneer/tofu/eggs/chicken/fish).</li>
+        <li><strong>Portion guide:</strong> carbs ~ 1 fist, protein ~ 1 palm, vegetables ~ 2 fists per main meal (adjust to hunger and goal).</li>
+        <li><strong>Sugar & liquids:</strong> prefer whole fruit over juice; keep sugary drinks as rare.</li>
+      </ul>
+    </section>
+  </section>
+  {% endif %}
+</section>
+{% endblock %}
+

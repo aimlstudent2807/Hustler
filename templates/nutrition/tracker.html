@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}Nutrition Tracker · SwasthyaSync{% endblock %}
+{% block content %}
+<section class="ss-section fade-in">
+  <div class="ss-section-header">
+    <h1>Smart Nutrition & Meal Timing Tracker</h1>
+    <p>Log meals, see live macro rings, and get timing‑aware nudges.</p>
+  </div>
+
+  <div class="ss-grid-two">
+    <form method="post" enctype="multipart/form-data" class="ss-card ss-card-elevated slide-up">
+      <h2>Analyse a meal photo</h2>
+      <p class="ss-muted">
+        Upload a clear plate photo. SwasthyaSync estimates calories, macros and gives next‑meal guidance.
+      </p>
+
+      <div class="ss-form-grid">
+        <label>
+          Meal label
+          <select name="meal_label" required>
+            <option value="">Select</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="snack">Snack</option>
+            <option value="dinner">Dinner</option>
+          </select>
+        </label>
+        <label class="ss-span-2">
+          Meal photo
+          <input type="file" name="meal_image" accept="image/*" required />
+        </label>
+        {% if analysis and analysis.meta and analysis.meta.source == 'fallback' %}
+        <p class="ss-muted ss-span-2">
+          Running in offline demo mode – values are reasonable examples. Connect Gemini to adapt per photo.
+        </p>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="ss-btn ss-btn-primary">
+        Upload & analyse
+      </button>
+    </form>
+
+    <div class="ss-card ss-card-elevated slide-up delay-1">
+      <h2>Today’s Macro Pulse</h2>
+      <div class="ss-rings">
+        {% for key, label, max_val in [
+          ('calories', 'Calories', 2500),
+          ('protein', 'Protein', 120),
+          ('carbs', 'Carbs', 300),
+          ('fats', 'Fats', 90)
+        ] %}
+        {% set value = (day_totals.get(key, 0) if day_totals else 0) %}
+        {% set pct = (value / max_val * 100) if max_val else 0 %}
+        <div class="ss-ring">
+          <svg viewBox="0 0 36 36" class="ss-ring-svg" data-value="{{ pct|round(0) }}">
+            <path
+              class="ss-ring-bg"
+              d="M18 2.0845
+                 a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            <path
+              class="ss-ring-progress"
+              stroke-dasharray="{{ pct|round(0) }}, 100"
+              d="M18 2.0845
+                 a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            <text x="18" y="20.35" class="ss-ring-text">
+              {{ pct|round(0) }}%
+            </text>
+          </svg>
+          <p class="ss-ring-label">{{ label }}</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if timing_feedback.message %}
+      <div class="ss-card ss-card-inline ss-card-highlight fade-in delay-2">
+        <h3>Timing insight</h3>
+        <p>{{ timing_feedback.message }}</p>
+      </div>
+      {% endif %}
+
+      {% if meal_logs %}
+      <div class="ss-divider"></div>
+      <h3>Today’s meal history</h3>
+      <p class="ss-muted">Overview of what you’ve logged today so far.</p>
+      <div class="ss-table-scroll">
+        <table class="ss-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Meal</th>
+              <th>Calories</th>
+              <th>Protein (g)</th>
+              <th>Carbs (g)</th>
+              <th>Fats (g)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in meal_logs %}
+            <tr>
+              <td>{{ log.logged_at.strftime('%H:%M') }}</td>
+              <td>{{ log.meal_label or 'Meal' }}</td>
+              <td>{{ (log.calories or 0)|round(0) }}</td>
+              <td>{{ (log.protein or 0)|round(1) }}</td>
+              <td>{{ (log.carbs or 0)|round(1) }}</td>
+              <td>{{ (log.fats or 0)|round(1) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if created_log %}
+  <div class="ss-grid-two" style="margin-top: 1.5rem;">
+    <div class="ss-card ss-card-elevated slide-up">
+      <h2>Latest meal snapshot</h2>
+      <p class="ss-muted">
+        Logged as {{ created_log.meal_label or 'meal' }} at {{ created_log.logged_at.strftime('%H:%M') }}.
+      </p>
+      {% if analysis and analysis.dish_name %}
+      <p><strong>Detected dish:</strong> {{ analysis.dish_name }}</p>
+      {% endif %}
+      <div class="ss-macro-row">
+        <div class="ss-macro-pill">
+          <span class="ss-macro-label">Calories</span>
+          <span class="ss-macro-value">{{ created_log.calories or 0|round(0) }}</span>
+        </div>
+        <div class="ss-macro-pill">
+          <span class="ss-macro-label">Protein</span>
+          <span class="ss-macro-value">{{ created_log.protein or 0|round(1) }} g</span>
+        </div>
+        <div class="ss-macro-pill">
+          <span class="ss-macro-label">Carbs</span>
+          <span class="ss-macro-value">{{ created_log.carbs or 0|round(1) }} g</span>
+        </div>
+        <div class="ss-macro-pill">
+          <span class="ss-macro-label">Fats</span>
+          <span class="ss-macro-value">{{ created_log.fats or 0|round(1) }} g</span>
+        </div>
+      </div>
+
+      <div class="ss-macro-bars">
+        {% set total_cals = (created_log.calories or 0) %}
+        {% set p = (created_log.protein or 0) * 4 %}
+        {% set c = (created_log.carbs or 0) * 4 %}
+        {% set f = (created_log.fats or 0) * 9 %}
+        {% set pc = (p / total_cals * 100) if total_cals else 0 %}
+        {% set cc = (c / total_cals * 100) if total_cals else 0 %}
+        {% set fc = (f / total_cals * 100) if total_cals else 0 %}
+        <h3 style="margin-top: 1rem;">Macro calorie split</h3>
+        <div class="ss-macro-bar-row">
+          <span class="ss-macro-bar-label">Protein</span>
+          <div class="ss-macro-bar-track">
+            <div class="ss-macro-bar-fill ss-macro-bar-protein" style="width: {{ pc|round(0) }}%;"></div>
+          </div>
+          <span class="ss-macro-bar-percent">{{ pc|round(0) }}%</span>
+        </div>
+        <div class="ss-macro-bar-row">
+          <span class="ss-macro-bar-label">Carbs</span>
+          <div class="ss-macro-bar-track">
+            <div class="ss-macro-bar-fill ss-macro-bar-carbs" style="width: {{ cc|round(0) }}%;"></div>
+          </div>
+          <span class="ss-macro-bar-percent">{{ cc|round(0) }}%</span>
+        </div>
+        <div class="ss-macro-bar-row">
+          <span class="ss-macro-bar-label">Fats</span>
+          <div class="ss-macro-bar-track">
+            <div class="ss-macro-bar-fill ss-macro-bar-fats" style="width: {{ fc|round(0) }}%;"></div>
+          </div>
+          <span class="ss-macro-bar-percent">{{ fc|round(0) }}%</span>
+        </div>
+      </div>
+
+      {% if analysis %}
+      <div class="ss-divider"></div>
+      <h3>AI perspective</h3>
+      <p>{{ analysis.summary }}</p>
+      {% if analysis.insights %}
+      <p class="ss-muted">
+        Balance score: <strong>{{ analysis.insights.balance_score }}</strong>/100
+      </p>
+      {% if analysis.insights.flags %}
+      <ul>
+        {% for flag in analysis.insights.flags %}
+        <li>{{ flag }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="ss-card ss-card-elevated slide-up delay-1">
+      <h2>What to eat next</h2>
+      {% if next_meal_plan %}
+      {% if next_meal_plan.headline %}
+      <p><strong>{{ next_meal_plan.headline }}</strong></p>
+      {% endif %}
+      {% if next_meal_plan.summary and next_meal_plan.summary != next_meal_plan.headline %}
+      <p class="ss-muted">{{ next_meal_plan.summary }}</p>
+      {% endif %}
+      {% if next_meal_plan.suggestions %}
+      <ul>
+        {% for tip in next_meal_plan.suggestions %}
+        <li>{{ tip }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% elif analysis and analysis.insights and analysis.insights.next_meal_suggestions %}
+      <ul>
+        {% for tip in analysis.insights.next_meal_suggestions %}
+        <li>{{ tip }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="ss-muted">
+        After this meal, aim for a protein‑anchored, veggie‑heavy next plate and keep sugary drinks minimal.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

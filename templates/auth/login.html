@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Login · SwasthyaSync{% endblock %}
+{% block content %}
+<section class="ss-section fade-in">
+  <div class="ss-section-header">
+    <h1>Welcome back to SwasthyaSync</h1>
+    <p>Sign in to access your intelligent lifestyle and nutrition insights.</p>
+  </div>
+
+  <div class="ss-grid-two">
+    <form method="post" class="ss-card ss-card-elevated slide-up">
+      <h2>Login</h2>
+      <div class="ss-form-grid">
+        <label class="ss-span-2">
+          Email
+          <input type="email" name="email" required />
+        </label>
+        <label class="ss-span-2">
+          Password
+          <input type="password" name="password" required />
+        </label>
+      </div>
+      <button type="submit" class="ss-btn ss-btn-primary">
+        Sign in
+      </button>
+      <p class="ss-muted" style="margin-top:0.75rem;">
+        New to SwasthyaSync?
+        <a href="{{ url_for('auth.register') }}">Create an account</a>
+      </p>
+    </form>
+
+    <div class="ss-card ss-card-elevated slide-up delay-1">
+      <h2>Intelligent Lifestyle Nutrition</h2>
+      <p class="ss-muted">
+        SwasthyaSync goes beyond calories. It learns your sleep, wake window,
+        meal timings, and food patterns to craft plans that align with your
+        circadian rhythm and real life.
+      </p>
+      <ul>
+        <li>Timing‑aware diet plans powered by Gemini AI</li>
+        <li>Lifestyle insights for sleep, hydration, and workouts</li>
+        <li>Smart nutrition tracker with adaptive feedback</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

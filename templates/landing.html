@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}SwasthyaSync · Intelligent Lifestyle Nutrition{% endblock %}
+{% block content %}
+<section class="ss-landing">
+  <div class="ss-landing-hero fade-in">
+    <div class="ss-landing-copy slide-up">
+      <h1>Sync your routine with smarter nutrition.</h1>
+      <p>
+        SwasthyaSync blends your real‑world timings, sleep and meals with Gemini‑powered intelligence
+        to craft plans that actually fit your life.
+      </p>
+      <div class="ss-landing-cta">
+        <a href="{{ url_for('auth.login') }}" class="ss-btn ss-btn-primary">Log in to your hub</a>
+        <a href="{{ url_for('auth.register') }}" class="ss-btn ss-btn-secondary">Create account</a>
+      </div>
+      <div class="ss-landing-pills">
+        <span class="ss-pill">Timing‑aware diet plans</span>
+        <span class="ss-pill">AI meal photo analysis</span>
+        <span class="ss-pill">Sleep & hydration insights</span>
+      </div>
+    </div>
+
+    <div class="ss-landing-hero-card slide-up delay-1">
+      <div class="ss-hero-glow"></div>
+      <h2>Your day, re‑imagined</h2>
+      <ul class="ss-hero-list">
+        <li><strong>Wake</strong> · Gentle hydration and first light snack.</li>
+        <li><strong>Work blocks</strong> · Stable energy, fewer crashes.</li>
+        <li><strong>Evening</strong> · Lighter dinners that respect your sleep.</li>
+      </ul>
+      <p class="ss-muted">
+        All generated dynamically from your profile, lifestyle timings and AI understanding of your plate.
+      </p>
+    </div>
+  </div>
+
+  <section class="ss-landing-grid fade-in delay-1">
+    <article class="ss-card ss-card-elevated ss-card-animated">
+      <h3>Diet Intelligence</h3>
+      <p>
+        Turn your wake, meal and sleep timings into a personal diet blueprint tuned for your goals and culture.
+      </p>
+      <ul>
+        <li>Timing‑aligned meal plans</li>
+        <li>Sleep and workout windows</li>
+        <li>Hydration rhythm you can keep</li>
+      </ul>
+    </article>
+
+    <article class="ss-card ss-card-elevated ss-card-animated">
+      <h3>Smart Nutrition Tracker</h3>
+      <p>
+        Snap a photo of your plate and let Gemini estimate calories, macros and what you should eat next.
+      </p>
+      <ul>
+        <li>Photo‑based macro estimates</li>
+        <li>Macro rings that update live</li>
+        <li>Calorie‑split visualisations</li>
+      </ul>
+    </article>
+
+    <article class="ss-card ss-card-elevated ss-card-animated">
+      <h3>Lifestyle Engine</h3>
+      <p>
+        Sleep, late dinners and erratic snacking are all factored into your guidance—no generic tips.
+      </p>
+      <ul>
+        <li>Sleep quality analysis</li>
+        <li>Timing‑aware nudges</li>
+        <li>Actionable “what to do next”</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="ss-landing-footer-cta slide-up delay-2">
+    <p>Ready to see your own timing‑aligned blueprint?</p>
+    <a href="{{ url_for('auth.register') }}" class="ss-btn ss-btn-primary">Start SwasthyaSync</a>
+  </section>
+</section>
+{% endblock %}
+

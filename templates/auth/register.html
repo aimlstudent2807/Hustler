@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Register · SwasthyaSync{% endblock %}
+{% block content %}
+<section class="ss-section fade-in">
+  <div class="ss-section-header">
+    <h1>Create your SwasthyaSync account</h1>
+    <p>Set up your profile to unlock personalised, timing‑aware nutrition intelligence.</p>
+  </div>
+
+  <div class="ss-grid-two">
+    <form method="post" class="ss-card ss-card-elevated slide-up">
+      <h2>Sign up</h2>
+      <div class="ss-form-grid">
+        <label class="ss-span-2">
+          Full name
+          <input type="text" name="full_name" required />
+        </label>
+        <label class="ss-span-2">
+          Email
+          <input type="email" name="email" required />
+        </label>
+        <label class="ss-span-2">
+          Password
+          <input type="password" name="password" required minlength="6" />
+        </label>
+      </div>
+      <button type="submit" class="ss-btn ss-btn-primary">
+        Create account
+      </button>
+      <p class="ss-muted" style="margin-top:0.75rem;">
+        Already have an account?
+        <a href="{{ url_for('auth.login') }}">Sign in</a>
+      </p>
+    </form>
+
+    <div class="ss-card ss-card-elevated slide-up delay-1">
+      <h2>Designed for real‑world health</h2>
+      <p class="ss-muted">
+        Once you sign up, SwasthyaSync will guide you through adding health
+        details, lifestyle timings, and food preferences—then keep learning from
+        your daily logs to refine its recommendations.
+      </p>
+      <ul>
+        <li>Modular, secure platform ready for premium tiers</li>
+        <li>Future‑proof for wearables and analytics dashboards</li>
+        <li>Built to feel like a production SaaS, not a demo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
